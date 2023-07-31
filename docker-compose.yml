@@ -1,0 +1,106 @@
+version: "3"
+
+volumes:
+  kong_data: {}
+
+networks:
+  kong-net:
+    external: false
+
+services:
+  http-test:
+    container_name: http-test
+    image: http-test:latest
+    ports:
+      - "8181:80"
+    networks:
+      - kong-net
+
+  grpc-test:
+    container_name: grpc-test
+    image: grpc-test:latest
+    ports:
+      - "8180:80"
+    networks:
+      - kong-net
+
+  grpcui:
+    image: wongnai/grpcui:master
+    container_name: grpcui
+    ports:
+      - "8081:8080"
+    environment:
+      - GRPCUI_SERVER=grpc-test:80
+    depends_on:
+      - grpc-test
+    networks:
+      - kong-net
+
+  kong-database:
+    container_name: kong-database
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "kong"
+      POSTGRES_DB: "kong"
+      POSTGRES_PASSWORD: "kongpass"
+    networks:
+      - kong-net
+    restart: on-failure
+    volumes:
+      - kong_data:/var/lib/postgresql/data
+
+  kong-migrations:
+    container_name: kong-migrations
+    image: kong/kong-gateway:3.3.1.0
+    command: kong migrations bootstrap
+    depends_on:
+      - kong-database
+    environment:
+      KONG_DATABASE: "postgres"
+      KONG_PG_HOST: "kong-database"
+      KONG_PG_PASSWORD: "kongpass"
+      KONG_PASSWORD: "test"
+    networks:
+      - kong-net
+    restart: on-failure
+
+  kong:
+    container_name: kong
+    image: kong/kong-gateway:3.3.1.0
+    depends_on:
+      - kong-database
+    environment:
+      KONG_DATABASE: "postgres"
+      KONG_PG_HOST: "kong-database"
+      KONG_PG_USER: "kong"
+      KONG_PG_PASSWORD: "kongpass"
+      KONG_PROXY_ACCESS_LOG: "/dev/stdout"
+      KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
+      KONG_PROXY_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      KONG_ADMIN_GUI_URL: "http://localhost:8002"
+      KONG_LICENSE_DATA: "{}"
+      KONG_PORTAL_GUI_HOST: "localhost:8003 KONG_PORTAL=on kong reload exit"
+      KONG_DECLARATIVE_CONFIG: "/etc/kong/kong.yml"
+      KONG_PROXY_LISTEN: "0.0.0.0:9000 http2, 0.0.0.0:9443 http2 ssl, 0.0.0.0:8000, 0.0.0.0:8443 ssl"
+      KONG_PLUGINS: "grpc-gateway"
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+      - "8001:8001"
+      - "8444:8444"
+      - "8002:8002"
+      - "8445:8445"
+      - "8003:8003"
+      - "8004:8004"
+      - "9000:9000"
+      - "9443:9443"
+    networks:
+      - kong-net
+    restart: on-failure:5
+    volumes:
+      - ./GrpcTest/Protos:/var/lib/grpc/protos:ro
+      - ./googleapis/google:/usr/local/opt/protobuf/include/google:ro

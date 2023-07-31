@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcTest.Docker";
+
+package calc;
+
+import "google/api/annotations.proto";
+
+service Calculator {
+  rpc Multiply (MultiplyRequest) returns (MultiplyResult) {
+    option (google.api.http) = {
+      post: "/v1/calculator/multiply"
+      body: "*"
+    };
+  }
+}
+
+message MultiplyRequest {
+  int32 X = 1;
+  int32 Y = 2;
+}
+
+message MultiplyResult {
+  int32 Result = 1;
+}
