@@ -8,6 +8,14 @@ networks:
     external: false
 
 services:
+  web-client:
+    container_name: web-client
+    image: web-client:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - kong-net
+
   http-test:
     container_name: http-test
     image: http-test:latest

@@ -1,22 +1,3 @@
-# FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
-# WORKDIR /App
-
-# # Copy everything
-# COPY ../project/ ./
-# # Restore as distinct layers
-# RUN dotnet restore GrpcTest.Docker.csproj
-# # Build and publish a release
-# RUN dotnet publish -c Release -o out
-
-# # Build runtime image
-# FROM mcr.microsoft.com/dotnet/aspnet:6.0
-# WORKDIR /App
-# COPY --from=build-env /App/out .
-# ENTRYPOINT ["dotnet", "GrpcTest.Docker.dll"]
-
-# EXPOSE 80
-
-
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
