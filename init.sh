@@ -2,6 +2,18 @@
 
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
+if ! command -v docker &> /dev/null
+then
+    echo "Install Docker, my dude!"
+    exit
+fi
+
+if ! command -v terraform &> /dev/null
+then
+    echo "Install Terraform, my dude!"
+    exit
+fi
+
 if [[ "$(docker images -q web-client 2> /dev/null)" = "" ]]; then
   cd $SCRIPTPATH/WebClient
   pwd
