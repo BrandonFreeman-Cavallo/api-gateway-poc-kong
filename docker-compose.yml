@@ -32,17 +32,17 @@ services:
     networks:
       - kong-net
 
-  grpcui:
-    image: wongnai/grpcui:master
-    container_name: grpcui
-    ports:
-      - "8081:8080"
-    environment:
-      - GRPCUI_SERVER=grpc-test:80
-    depends_on:
-      - grpc-test
-    networks:
-      - kong-net
+  # grpcui:
+  #   image: wongnai/grpcui:master
+  #   container_name: grpcui
+  #   ports:
+  #     - "8081:8080"
+  #   environment:
+  #     - GRPCUI_SERVER=grpc-test:80
+  #   depends_on:
+  #     - grpc-test
+  #   networks:
+  #     - kong-net
 
   kong-database:
     container_name: kong-database

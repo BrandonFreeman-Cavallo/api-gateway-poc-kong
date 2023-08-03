@@ -6,6 +6,5 @@ resource "kong_service" "grpc_test" {
   protocol        = "grpc"
   read_timeout    = 60000
   retries         = 5
-  tls_verify      = false
   write_timeout   = 60000
 }

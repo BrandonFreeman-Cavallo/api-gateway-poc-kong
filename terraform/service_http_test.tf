@@ -3,7 +3,6 @@ resource "kong_service" "http_test" {
   read_timeout    = 60000
   path            = "/"
   write_timeout   = 60000
-  tls_verify      = false
   host            = "http-test"
   name            = "http-test"
   protocol        = "http"
