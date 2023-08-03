@@ -14,6 +14,11 @@ then
     exit
 fi
 
+if [ ! -d "./googleapis/google/api" ]; then
+  echo "Updating git submodules"
+  git submodule update --init --recursive
+fi
+
 if [[ "$(docker images -q web-client 2> /dev/null)" = "" ]]; then
   cd $SCRIPTPATH/WebClient
   pwd
