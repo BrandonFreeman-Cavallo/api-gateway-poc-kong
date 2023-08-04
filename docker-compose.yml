@@ -77,7 +77,10 @@ services:
 
   kong:
     container_name: kong
-    image: kong:3.3.1-ubuntu
+    # image: kong:3.3.1-ubuntu
+    build:
+      context: ./kong
+      dockerfile: Dockerfile
     depends_on:
       - kong-database
     healthcheck:
@@ -97,7 +100,7 @@ services:
       KONG_ADMIN_LISTEN: "0.0.0.0:8001"
       # KONG_DECLARATIVE_CONFIG: "/etc/kong/kong.yml"
       KONG_PROXY_LISTEN: "0.0.0.0:9000 http2, 0.0.0.0:9443 http2 ssl, 0.0.0.0:8000, 0.0.0.0:8443 ssl"
-      KONG_PLUGINS: "grpc-gateway"
+      KONG_PLUGINS: "grpc-gateway, kong-jwt2header, oidc"
     ports:
       - "8000:8000"
       - "8443:8443"
@@ -109,15 +112,16 @@ services:
     volumes:
       - ./GrpcTest/Protos:/var/lib/grpc/protos:ro
       - ./googleapis/google:/usr/local/opt/protobuf/include/google:ro
+      - ./kong/kong-oidc:/usr/local/share/lua/5.1/kong/plugins/oidc
 
-  konga:
-    image: pantsel/konga
-    ports:
-      - 1337:1337
-    links:
-      - kong:kong
-    container_name: konga
-    environment:
-      - NODE_ENV=production
-    networks:
-      - kong-net
+  # konga:
+  #   image: pantsel/konga
+  #   ports:
+  #     - 1337:1337
+  #   links:
+  #     - kong:kong
+  #   container_name: konga
+  #   environment:
+  #     - NODE_ENV=production
+  #   networks:
+  #     - kong-net
