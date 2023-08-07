@@ -1,6 +1,6 @@
 using System;
 
-namespace Client.Models;
+namespace SampleMvcApp.Models;
 
 public class AuthResponseModel
 {

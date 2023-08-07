@@ -1,5 +1,7 @@
 {
   "client_id": "bHW0bRteCRpqixixUMI162fbcyljZc7B",
   "client_secret": "n6yLdh7N_rVvRGETWosSTfVlgoRQCt5MSOLw-sRaPrbwcfRaH8YxrrKVwy8lYG6J",
-  "discovery": "https://dev-e0v104xjhwtid6mb.us.auth0.com/.well-known/openid-configuration"
+  "discovery": "https://dev-e0v104xjhwtid6mb.us.auth0.com/.well-known/openid-configuration",
+  "introspection_endpoint_auth_method": "client_secret_basic",
+  "bearer_only": true
 }

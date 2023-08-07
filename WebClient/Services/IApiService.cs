@@ -1,5 +1,5 @@
 
-using Client.Models;
+using SampleMvcApp.Models;
 
 namespace SampleMvcApp.Services
 {

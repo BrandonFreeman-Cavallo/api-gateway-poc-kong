@@ -1,5 +1,5 @@
-using Client.Models;
 using RestSharp;
+using SampleMvcApp.Models;
 
 namespace SampleMvcApp.Services
 {

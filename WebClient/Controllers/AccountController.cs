@@ -9,7 +9,10 @@ using System.Security.Claims;
 using Auth0.AspNetCore.Authentication;
 using System;
 using System.Globalization;
-using Client.Models;
+using SampleMvcApp.Models;
+using RestSharp;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace SampleMvcApp.Controllers
 {
@@ -44,12 +47,25 @@ namespace SampleMvcApp.Controllers
 
             string result = $"We have a token: { (!string.IsNullOrWhiteSpace(authResponse?.IdToken) ? "Yes" : "No") }";
 
+            RestClient client = new RestClient();
+            RestRequest request = new RestRequest("http://localhost:8000/abac/weatherforecast", Method.Get);
+            request.AddHeader("authorization", $"Bearer {authResponse?.IdToken ?? ""}");
+            RestResponse response = client.Execute(request);
+
+            // Dictionary<string, string> claims = null;
+
+            // if (HttpContext.User.Identity is ClaimsIdentity identity)
+            // {
+            //     claims = identity.Claims.ToDictionary(k => k.Type, v => v.Value);
+            // }
+
             return View(new UserProfileViewModel()
             {
                 Name = User.Identity.Name,
                 EmailAddress = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
                 ProfileImage = User.Claims.FirstOrDefault(c => c.Type == "picture")?.Value,
-                ApiResult = result
+                Forecast = JsonConvert.DeserializeObject<List<Forecast>>(response.Content.ToString()),
+                // Claims = claims ?? new Dictionary<string, string>()
             });
         }
 
@@ -77,17 +93,17 @@ namespace SampleMvcApp.Controllers
                 return null;
             }
 
-            AuthResponseModel response = new AuthResponseModel {
+            AuthResponseModel response = new()
+            {
                 AccessToken = await HttpContext.GetTokenAsync("access_token"),
                 IdToken = await HttpContext.GetTokenAsync("id_token"),
             };
 
-            DateTime accessTokenExpiresAt = DateTime.MinValue; 
             DateTime.TryParse(
-                await HttpContext.GetTokenAsync("expires_at"), 
+                await HttpContext.GetTokenAsync("expires_at"),
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.RoundtripKind,
-                out accessTokenExpiresAt);
+                out DateTime accessTokenExpiresAt);
 
             response.ExpiresAt = accessTokenExpiresAt;
                 

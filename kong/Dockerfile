@@ -4,6 +4,9 @@ USER 0
 
 WORKDIR /tmp
 
+RUN apt update \
+    && apt install -y unzip wget nano
+
 RUN luarocks install kong-jwt2header
 # RUN luarocks install kong-oidc
 
@@ -11,9 +14,6 @@ COPY ./kong-oidc /tmp/kong-oidc
 
 WORKDIR /tmp/kong-oidc
 RUN luarocks make
-
-# RUN apt update \
-#     && apt install -y unzip wget
 
 # RUN mkdir -p /tmp/kong-jwt2header \
 #     && wget https://github.com/yesinteractive/kong-jwt2header/archive/refs/heads/master.zip \

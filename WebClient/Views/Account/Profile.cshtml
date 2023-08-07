@@ -19,7 +19,11 @@
                 </p>
             </div>
             <div class="col-md-4">
-                <p>API Result: @Model.ApiResult</p>
+                @foreach (var item in Model.Forecast)
+                {
+                    <div>@item.Date.ToString("dddd")</div>
+                    <div>@item.TemperatureF *F, @item.Summary</div>
+                }
             </div>
         </div>
     </div>
