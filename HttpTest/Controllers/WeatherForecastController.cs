@@ -21,6 +21,13 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
+        string strOutput = "";
+        foreach (var header in Request.Headers)
+        {
+            strOutput = strOutput + $"{header.Key} => {header.Value.ToString()}" + Environment.NewLine;
+        }
+        Console.WriteLine(strOutput);
+
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = DateTime.Now.AddDays(index),

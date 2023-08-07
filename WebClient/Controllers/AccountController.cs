@@ -48,24 +48,16 @@ namespace SampleMvcApp.Controllers
             string result = $"We have a token: { (!string.IsNullOrWhiteSpace(authResponse?.IdToken) ? "Yes" : "No") }";
 
             RestClient client = new RestClient();
-            RestRequest request = new RestRequest("http://localhost:8000/abac/weatherforecast", Method.Get);
+            RestRequest request = new RestRequest("http://kong:8000/abac/weatherforecast", Method.Get);
             request.AddHeader("authorization", $"Bearer {authResponse?.IdToken ?? ""}");
             RestResponse response = client.Execute(request);
-
-            // Dictionary<string, string> claims = null;
-
-            // if (HttpContext.User.Identity is ClaimsIdentity identity)
-            // {
-            //     claims = identity.Claims.ToDictionary(k => k.Type, v => v.Value);
-            // }
 
             return View(new UserProfileViewModel()
             {
                 Name = User.Identity.Name,
                 EmailAddress = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
                 ProfileImage = User.Claims.FirstOrDefault(c => c.Type == "picture")?.Value,
-                Forecast = JsonConvert.DeserializeObject<List<Forecast>>(response.Content.ToString()),
-                // Claims = claims ?? new Dictionary<string, string>()
+                Forecast = response?.Content != null ? JsonConvert.DeserializeObject<List<Forecast>>(response.Content.ToString()) : new List<Forecast>(),
             });
         }
 

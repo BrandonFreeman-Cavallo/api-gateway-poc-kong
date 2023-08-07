@@ -9,17 +9,23 @@ networks:
     external: false
 
 services:
-  # web-client:
-  #   container_name: web-client
-  #   image: web-client:latest
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - kong-net
+  web-client:
+    container_name: web-client
+    build:
+      context: ./WebClient
+      dockerfile: Dockerfile
+    # image: web-client:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - kong-net
 
   http-test:
     container_name: http-test
-    image: http-test:latest
+    build:
+      context: ./HttpTest
+      dockerfile: Dockerfile
+    # image: http-test:latest
     ports:
       - "8181:80"
     networks:
@@ -27,7 +33,10 @@ services:
 
   grpc-test:
     container_name: grpc-test
-    image: grpc-test:latest
+    build:
+      context: ./GrpcTest
+      dockerfile: Dockerfile
+    # image: grpc-test:latest
     ports:
       - "8180:80"
     networks:
