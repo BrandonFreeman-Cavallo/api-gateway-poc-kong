@@ -1,0 +1,10 @@
+{
+  "rules": [
+    {
+      "condition": {
+        "X-Kong-JWT-Claim-locale": "en"
+      },
+      "upstream_name": "myip"
+    }
+  ]
+}

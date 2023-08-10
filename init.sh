@@ -30,7 +30,7 @@ if ! test -f "./GrpcTest/google/api/http.proto"; then
 fi
 
 docker compose down -v
-docker compose up -d
+docker compose up -d --build
 
 cd $SCRIPTPATH/terraform
 

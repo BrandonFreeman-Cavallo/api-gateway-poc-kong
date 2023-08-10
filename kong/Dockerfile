@@ -11,8 +11,12 @@ RUN luarocks install kong-jwt2header
 # RUN luarocks install kong-oidc
 
 COPY ./kong-oidc /tmp/kong-oidc
-
 WORKDIR /tmp/kong-oidc
+RUN luarocks make
+
+
+COPY ./custom_plugin /tmp/custom_plugin
+WORKDIR /tmp/custom_plugin
 RUN luarocks make
 
 # RUN mkdir -p /tmp/kong-jwt2header \

@@ -1,0 +1,5 @@
+resource "kong_plugin" "route-by-header" {
+  name        = "route-by-header"
+  config_json = file("${path.module}/configs/route_by_header.json")
+  route_id    = kong_route.org_cavallo.id
+}

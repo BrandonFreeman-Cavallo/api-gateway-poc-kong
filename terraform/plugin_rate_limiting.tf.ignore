@@ -1,0 +1,6 @@
+resource "kong_plugin" "rate_limiting_jwt" {
+  name        = "kong-rate-limiting"
+  config_json = file("${path.module}/configs/rate_limiting.json")
+  service_id  = kong_service.http_test.id
+  route_id    = kong_route.jwt.id
+}
